@@ -216,6 +216,7 @@ seurat_object@meta.data$group = sample_labels
 VlnPlot(seurat_object, features = c("STAT2"), group.by = "group")
 FeaturePlot(seurat_object, features = c("STAT2"))
 
+----------------------
 #cellxgene file output
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
@@ -226,49 +227,4 @@ library(SeuratDisk)
 SaveH5Seurat(seurat_object, filename = "/Users/nraja/Desktop/Single Cell processing via Seurat/cellxgene.h5Seurat")
 Convert("/Users/nraja/Desktop/Single Cell processing via Seurat/cellxgene.h5Seurat", dest = "h5ad")
 
-#setting up a loop for aggregation for projection
-#we want to take for each cluster within the curly braces we want to select out the count matrix that corresponds to that count cluster (everything you want to do is in the braces)
-df <- data.frame(row.names = 0:33537)
-for (i_cluster in unique(seurat_object@meta.data$seurat_clusters)) 
-{
-  message(sprintf("Current cluster:%s\n", i_cluster))
-  seurat_object@meta.data[seurat_object@meta.data[,"seurat_clusters"] == i_cluster,]
-  temp <- mat[,row.names(seurat_object@meta.data[seurat_object@meta.data[,"seurat_clusters"] == i_cluster,])]
-  print(dim(temp))
-  colSums(temp!=0)
-  colnames(temp) <- sample.int(floor(ncol(temp)/150), ncol(temp), replace = TRUE)
-  print(colnames(temp))
-  for (i_subset in unique(colnames(temp))) 
-  {temp_subcluster <- temp[,colnames(temp)==i_subset]
-  i_name<-paste(i_cluster, i_subset, sep= "_")
-  print(i_name)
-  df[i_name] <- rowSums(temp_subcluster)
-  }  
-}
-rownames(df)<-feature.names$V1
-colSums(df)
-#export file now for projection on atlas
-write.table(df, file = "C:/Users/nraja/Desktop/Single Cell processing via Seurat/df.tsv", quote = FALSE, sep = "\t" )
-#make sample description file
-df_samples <- data.frame(row.names = colnames(df))
-df_samples$names <- row.names(df_samples)
-df_samples <- separate(df_samples, col = names, into = c("cluster", "sub_cluster"), sep = "_")
-write.table(df_samples, file = "C:/Users/nraja/Desktop/Single Cell processing via Seurat/df_seurat_samples.tsv", quote = FALSE, sep = "\t" )
 
-seurat_object <- RunPCA(object = seurat_object)
-DimPlot(object = seurat_object, reduction = "pca")
-VariableFeaturePlot(object = seurat_object)
-FeaturePlot(object = seurat_object, features = c("IL1B", "MMP9"), blend = TRUE)
-
-levels(seurat_object)
-seurat_object.markers <- FindAllMarkers(seurat_object, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
-seurat_object.markers %>%
-  group_by(cluster) %>%
-  slice_max(n = 2, order_by = avg_log2FC)
-write.table(seurat_object.markers, file = "C:/Users/nraja/Desktop/Single Cell processing via Seurat/seurat_object.markers.tsv", quote = FALSE, sep = "\t" )
-
-cluster.markers <- FindMarkers(seurat_object, ident.1 = 6, ident.2 = c(10), min.pct = 0.25)
-head(cluster.markers, n = 10)
-
-VlnPlot(seurat_object, features = c("VIM"))
-FeaturePlot(seurat_object, features = c("HLA-DRB1"))
