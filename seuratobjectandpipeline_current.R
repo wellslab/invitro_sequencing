@@ -105,10 +105,6 @@ p<-DimPlot(seurat_object, reduction = "umap")
 p<-p + scale_color_manual(values = c('#E6194B', '#3CB44B', '#FFE119', '#4363D8', '#F58231', '#911EB4', '#46F0F0', '#F032E6', '#BCF60C', '#FABEBE', '#008080', '#E6BEFF', '#9A6324', '#FFFAC8', '#800000', '#AAFFC3', '#808000', '#FFD8B1', '#000075', '#808080', '#FFFFFF', '#000000'))
 p
 
-#find all markers distinguishing cluster 8 from cluster 11
-seurat_object.PSCMcontrolsubsets <- FindMarkers(seurat_object, ident.1= 8, ident.2 = 11, min.pct=0.25)
-head(seurat_object.PSCMcontrolsubsets, n=5)
-write.table(seurat_object.PSCMcontrolsubsets, file = "C:/Users/rajabn/Desktop/SSAnalysis/PSCM_controlsubsets.tsv", quote = FALSE, sep = "\t" )
 
 #find all markers distinguishing cluster 11 from cluster 8
 seurat_object.PSCMcontrolsubsets <- FindMarkers(seurat_object, ident.1= 11, ident.2 = 8, min.pct=0.25)
@@ -120,10 +116,6 @@ seurat_object.PSCMcontrolsubsets <- FindMarkers(seurat_object, ident.1= 0, ident
 head(seurat_object.PSCMcontrolsubsets, n=5)
 write.table(seurat_object.PSCMcontrolsubsets, file = "C:/Users/rajabn/Desktop/SSAnalysis/PSCM_acutesubsets.tsv", quote = FALSE, sep = "\t" )
 
-#find all markers distinguishing cluster 10 from 0
-seurat_object.PSCMcontrolsubsets <- FindMarkers(seurat_object, ident.1= 10, ident.2 = 0, min.pct=0.25)
-head(seurat_object.PSCMcontrolsubsets, n=5)
-write.table(seurat_object.PSCMcontrolsubsets, file = "C:/Users/rajabn/Desktop/SSAnalysis/PSCM_controlsubsets.tsv", quote = FALSE, sep = "\t" )
 
 -------------------------------------------
 
