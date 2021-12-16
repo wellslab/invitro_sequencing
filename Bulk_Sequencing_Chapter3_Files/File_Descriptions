@@ -1,9 +1,15 @@
 File Descriptions:
 
 DE Analysis upregulatd genes lists:
--- iMAC acute vs iMAC control_upregulated genes(1).xlsx
---MDM Acute vs MDM Control_upregulated (1).xlsx
+-- iMAC acute vs iMAC control_upregulated genes(1).xlsx (pluripotent stem cell macrophages acute stimulation vs control, upregulated genes)
+--MDM Acute vs MDM Control_upregulated (1).xlsx (monocyte derived macrophages acute stimulation vs control, upregulated genes)
 
 Reactome Pathway Reports:
-imac acute vs imac control_upregulated.pdf
-MDM acute vs MDM control_upregulated.pdf
+--imac acute vs imac control_upregulated.pdf  (pluripotent stem cell macrophages acute stimulation vs control, upregulated genes)
+--MDM acute vs MDM control_upregulated.pdf  (monocyte derived macrophages acute stimulation vs control, upregulated genes)
+
+
+Homer Analysis (KnownResults):
+--homer_MDMacute_knownResults.html   (monocyte derived macrophages acute stimulation)
+--homer_PSCacute_knownResults.html   (pluripotent stem cell macrophages acute stimulation)
+--homer_PSCMtolerancevsacute_knownResults.html  (pluripotent stem cell macrophages re-stimulated vs acute stimulation)
