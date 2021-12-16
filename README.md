@@ -11,4 +11,4 @@ Bulk mRNA-sequencing pipeline was carried out as described in:
  Single Cell-sequencing seurat pipeline was carried out as described on: 
  https://satijalab.org/seurat/articles/pbmc3k_tutorial.html
 
-Files associated with Chapter 5/Single cell sequencing analysis located in file "Single Cell Analysis"
+Files associated with Chapter 5/Single cell sequencing analysis located in file "Single_Cell_Chapter5_Files"
