@@ -37,6 +37,22 @@ lcpm.cutoff
 x <- calcNormFactors(x, method = "TMM")
 x$samples$norm.factors
 lcpm <- cpm(x, log=TRUE)
+boxplot(lcpm, las=2, col=col, main="")
+title(main="B. Normalised data", ylab="Log-cpm")
+
+#MDSPlot
+glMDSPlot(lcpm, labels=paste(group), groups=x$samples, launch=TRUE)
+design <- model.matrix(~0+group)
+colnames(design) <- gsub("group", "", colnames(design))
+design
+
+#Voom and fitting linear models for comparisons of interest
+v <- voom(x, design, plot=TRUE)
+v
+vfit <- lmFit(v, design)
+vfit <- contrasts.fit(vfit, contrasts=contr.matrix)
+efit <- eBayes(vfit)
+plotSA(efit)
 
 #Differential expression analysis
 design <- model.matrix(~0+group)
