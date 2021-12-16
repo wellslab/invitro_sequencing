@@ -1,0 +1,74 @@
+library(BiocManager)
+library(BiocVersion)
+library(edgeR)
+library(Glimma)
+
+
+# Read in the file
+raw.data <- read.delim("gene_count_frags.txt")
+# Ask to see sample names
+names(raw.data)
+x <- raw.data[, 2:15] #position 2 to 15 are samples
+rownames(x) <- raw.data[, 1] #position 1 is the column listing genes
+group <- as.factor(c("MDM_control", "MDM_control", "MDM_control", "MDM_acute", "MDM_acute", "MDM_acute", "MDM_tolerance", "MDM_tolerance", "iMAC_control", "iMAC_control", "iMAC_acute", "iMAC_acute", "iMAC_tolerance", "iMAC_tolerance"))
+x <- DGEList(counts = x, group)
+x <- DGEList(counts = x, group = grpup)
+x <- DGEList(counts = x, group = group)
+x
+dim(x)
+
+#Data pre-processing
+cpm <- cpm(x)
+lcpm <- cpm(x, log=TRUE)
+L <- mean(x$samples$lib.size) * 1e-06
+M <- median(x$samples$lib.size) * 1e-06
+c(L,M)
+summary(lcpm)
+
+#Removing genes that are lowly expressed
+table(rowSums(x$counts==0)==14)
+keep.exprs <- filterByExpr(x, group)
+x <- x[keep.exprs,, keep.lib.size=FALSE]
+dim(x)
+lcpm.cutoff <- log2(10/M + 2/L)
+lcpm.cutoff
+
+#Normalising gene expresion distributions
+x <- calcNormFactors(x, method = "TMM")
+x$samples$norm.factors
+lcpm <- cpm(x, log=TRUE)
+
+#Differential expression analysis
+design <- model.matrix(~0+group)
+colnames(design) <- gsub("group", "", colnames(design))
+design
+contr.matrix <- makeContrasts(
+  MDM_controlvsMDM_acute = MDM_control - MDM_acute,
+  MDM_acutevsMDM_tolerance = MDM_acute - MDM_tolerance,
+  MDM_controlvsMDM_tolerance = MDM_control - MDM_tolerance,
+  MDM_acutevsMDM_control = MDM_acute - MDM_control,
+  MDM_tolerancevsMDM_acute = MDM_tolerance - MDM_acute,
+  MDM_tolerancevsMDM_control = MDM_tolerance - MDM_control,
+  iMAC_controlvsiMAC_acute = iMAC_control - iMAC_acute,
+  iMAC_acutevsiMAC_tolerance = iMAC_acute - iMAC_tolerance,
+  iMAC_controlvsiMAC_tolerance = iMAC_control - iMAC_tolerance,
+  iMAC_acutevsiMAC_control = iMAC_acute - iMAC_control,
+  iMAC_tolerancevsiMAC_acute = iMAC_tolerance - iMAC_acute,
+  iMAC_tolerancevsiMAC_control = iMAC_tolerance - iMAC_control,
+  MDM_controlvsiMAC_control = MDM_control - iMAC_control,
+  MDM_acutevsiMAC_acute = MDM_acute - iMAC_acute,
+  MDM_tolerancevsiMAC_tolerance = MDM_tolerance - iMAC_tolerance,
+  MDM_acutevsiMAC_acute = MDM_acute - iMAC_acute,
+  MDM_tolerancevsiMAC_tolerance = MDM_tolerance - iMAC_tolerance,
+  iMAC_controlvsMDM_control = iMAC_control - MDM_control,
+  iMAC_acutevsMDM_acute = iMAC_acute - MDM_acute,
+  iMAC_tolerancevsMDM_tolerance = iMAC_tolerance - MDM_tolerance,
+  iMAC_acutevsMDM_acute = iMAC_acute - MDM_acute,
+  iMAC_tolerancevsMDM_tolerance = iMAC_tolerance - MDM_tolerance,
+  MDM_controlvsiMAC_acute = MDM_control - iMAC_acute,
+  iMAC_acutevsMDM_control = iMAC_acute - MDM_control,
+  MDM_controlevsiMAC_tolerance = MDM_control - iMAC_tolerance,
+  iMAC_tolerancevsMDM_control = iMAC_tolerance - MDM_control,
+  MDM_acutevsiMAC_tolerance = MDM_acute - iMAC_tolerance,
+  iMAC_tolerancevsMDM_acute = iMAC_tolerance - MDM_acute,
+  levels = colnames(design))
