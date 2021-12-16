@@ -1,1 +1,20 @@
+Files used in Chapter 5
 
+
+Files for Projection onto Myeloid Atlas
+--merged_samplenames_100_new.tsv
+--Merged_seurat_samplenames_100_new.tsv
+
+
+Subset Gene Lists
+--PSCM_acutesubsets_distingcluster0from10.tsv
+--PSCM_controlsubsets_distingcluster11fromcluster8.tsv
+
+
+Pseudobulk DE Analysis Gene Lists for Pathway Analysis
+--de_PSCM acute_vs_PSCM control_genes.csv
+--de_PSCM restimulation_vs_PSCM acute_genes.csv
+
+Reactome Reports
+--PSCM acute vs PSCM control SC_DEanalysis.pdf
+--PSCM restimulated vs PSCM acute SC_DEanalysis.pdf
